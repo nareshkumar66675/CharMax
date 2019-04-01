@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CharMax.Helper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ namespace CharMax
     {
         static void Main(string[] args)
         {
+            var dataTable = FileOperation.ReadDataFile(@"C:\Users\kumar\OneDrive\Documents\Projects\CharMax\CharMax\Datasets\test.d");
         }
     }
 }
