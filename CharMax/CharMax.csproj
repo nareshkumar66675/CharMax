@@ -44,14 +44,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helper\FileOperation.cs" />
+    <Compile Include="Models\AttributeValuePair.cs" />
+    <Compile Include="Operations\AttValPairCompute.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sets\Characteristic.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Datasets\test.d" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Datasets\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
