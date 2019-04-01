@@ -21,6 +21,9 @@ namespace CharMax
 
             characteristic.FindCharacteristicSets(dataTable, attributeValuePairs);
 
+            MaximalConsistent maximalConsistent = new MaximalConsistent();
+
+            maximalConsistent.SetBMaximalConsistent(characteristic);
         }
     }
 }
