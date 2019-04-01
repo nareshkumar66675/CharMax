@@ -10,9 +10,9 @@ namespace CharMax.Sets
     {
         public List<List<int>> BMaximal { get; set; } = new List<List<int>>();
 
-        public List<List<int>> AConsistent { get; set; }
+        public Dictionary<int, List<List<int>>> AConsistent { get; set; } = new Dictionary<int, List<List<int>>>();
 
-        public void SetBMaximalConsistent(Characteristic characteristic)
+        public void SetMaximalConsistents(Characteristic characteristic)
         {
             List<List<int>> tempBMaximal = new List<List<int>>();
             foreach (var set in characteristic.CharacteristicSets)
@@ -32,6 +32,15 @@ namespace CharMax.Sets
             }
 
             BMaximal = FindAndRemoveDuplicateMaximalBlocks(tempBMaximal);
+            SetAConsistent(characteristic.CharacteristicSets.Count);
+        }
+
+        private void SetAConsistent(int count)
+        {
+            for (int i = 1; i <= count; i++)
+            {
+                AConsistent.Add(i, BMaximal.Where(t => t.Contains(i)).ToList());
+            }
         }
 
         private List<List<int>> FindAndRemoveDuplicateMaximalBlocks(List<List<int>> bMaximal)

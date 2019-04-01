@@ -23,7 +23,7 @@ namespace CharMax
 
             MaximalConsistent maximalConsistent = new MaximalConsistent();
 
-            maximalConsistent.SetBMaximalConsistent(characteristic);
+            maximalConsistent.SetMaximalConsistents(characteristic);
         }
     }
 }
