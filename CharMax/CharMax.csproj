@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helper\Extensions.cs" />
     <Compile Include="Helper\FileOperation.cs" />
     <Compile Include="Models\AttributeValuePair.cs" />
     <Compile Include="Operations\AttValPairCompute.cs" />
