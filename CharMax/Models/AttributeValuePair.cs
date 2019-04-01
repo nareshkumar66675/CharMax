@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CharMax.Helper;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -35,11 +36,11 @@ namespace CharMax.Models
             {
                 if(column.Ordinal < dataTable.Columns.Count -2)
                 {
-                    var distinctValues = dataEnumer.Select(r => r.Field<string>(column.ColumnName)).Distinct().ToList();
+                    var distinctValues = dataEnumer.FindDistinctValues<string>(column);
 
                     distinctValues.RemoveAll(t => t == "*" || t == "?");
 
-                    var starValues = FindRecords(dataEnumer, column, "*");
+                    var starValues = dataEnumer.FindRecords(column, "*");
                     
                     foreach (var value in distinctValues)
                     {
@@ -47,7 +48,7 @@ namespace CharMax.Models
 
                         attributeValuePair.AttributeValue.Attribute = column.ColumnName;
                         attributeValuePair.AttributeValue.Value = value;
-                        attributeValuePair.Blocks = FindRecords(dataEnumer, column, value).Union(starValues).ToList();
+                        attributeValuePair.Blocks = dataEnumer.FindRecords(column, value).Union(starValues).ToList();
 
                         pairs.Add(attributeValuePair);
                     }
@@ -57,13 +58,5 @@ namespace CharMax.Models
             return pairs;
         }
 
-        private static List<int> FindRecords(EnumerableRowCollection<DataRow> dataEnumer,DataColumn column, string value)
-        {
-            var starValues = from rows in dataEnumer
-                             where rows.Field<string>(column) == value
-                             select rows.Field<string>("ID");
-
-            return starValues.Select(int.Parse).ToList();
-        }
     }
 }
