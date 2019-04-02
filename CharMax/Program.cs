@@ -1,5 +1,6 @@
 ﻿using CharMax.Helper;
 using CharMax.Models;
+using CharMax.Operations;
 using CharMax.Sets;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,9 @@ namespace CharMax
 
             maximalConsistent.SetMaximalConsistents(characteristic);
 
+            ProbApprox probApprox = new ProbApprox();
 
+            probApprox.SetConceptProbabilities(dataTable, characteristic);
         }
     }
 }

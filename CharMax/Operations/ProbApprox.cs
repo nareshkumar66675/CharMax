@@ -14,8 +14,8 @@ namespace CharMax.Operations
         /// <summary>
         /// (Decision-value,{1,2,3,4}),{(1,0.5),(2,0.667),(3,1)}
         /// </summary>
-        public Dictionary<KeyValuePair<string, List<int>>, Dictionary<int, int>> Probabilities { get; set; } 
-            = new Dictionary<KeyValuePair<string, List<int>>, Dictionary<int, int>>();
+        public Dictionary<KeyValuePair<string, List<int>>, Dictionary<int, float>> Probabilities { get; set; } 
+            = new Dictionary<KeyValuePair<string, List<int>>, Dictionary<int, float>>();
 
         public void SetConceptProbabilities(DataTable dataSet, Characteristic characteristic)
         {
@@ -23,7 +23,7 @@ namespace CharMax.Operations
 
             foreach (var decision in decisions)
             {
-                Dictionary<int, int> tempProbs = new Dictionary<int, int>();
+                Dictionary<int, float> tempProbs = new Dictionary<int, float>();
                 foreach (var characteristicValues in characteristic.CharacteristicSets)
                 {
                     tempProbs.Add(characteristicValues.Key, FindProbability(characteristicValues.Value, decision.Value));
@@ -38,9 +38,9 @@ namespace CharMax.Operations
         /// <param name="SetA"></param>
         /// <param name="SetB"></param>
         /// <returns></returns>
-        private int FindProbability(List<int> SetA, List<int> SetB)
+        private float FindProbability(List<int> SetA, List<int> SetB)
         {
-            return SetA.Intersect(SetB).Count() / SetA.Count;
+            return (float)SetA.Intersect(SetB).Count() / (float)SetA.Count;
         }
 
 
@@ -48,11 +48,11 @@ namespace CharMax.Operations
         {
             Dictionary<string, List<int>> decisions = new Dictionary<string, List<int>>();
 
-            var distinctValues = dataSet.FindDistinctValues<string>(dataSet.Columns.Count - 1);
+            int decisionOrdinal = dataSet.Columns.Count - 2;
+
+            var distinctValues = dataSet.FindDistinctValues<string>(decisionOrdinal);
 
             var dataEnumer = dataSet.AsEnumerable();
-
-            int decisionOrdinal = dataSet.Columns.Count - 1;
 
             foreach (var value in distinctValues)
             {
