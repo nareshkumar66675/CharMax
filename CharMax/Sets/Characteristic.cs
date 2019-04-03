@@ -13,14 +13,14 @@ namespace CharMax.Sets
     {
         public Dictionary<int, List<int>> CharacteristicSets { get; set; } = new Dictionary<int, List<int>>();
 
-        public void FindCharacteristicSets(DataTable dataSet, AttributeValuePairs attributeValuePairs)
+        public void FindCharacteristicSets(Data data, AttributeValuePairs attributeValuePairs)
         {
-            foreach (DataRow row in dataSet.Rows)
+            foreach (DataRow row in data.DataSet.Rows)
             {
                 List<List<int>> characteristicList = new List<List<int>>();
-                foreach (DataColumn col in dataSet.Columns)
+                foreach (DataColumn col in data.DataSet.Columns)
                 {
-                    if (col.Ordinal < dataSet.Columns.Count - 2)
+                    if (col.Ordinal < data.DataSet.Columns.Count - 2)
                     {
                         var value = row[col].ToString();
 

@@ -15,12 +15,15 @@ namespace CharMax
         static void Main(string[] args)
         {
             var dataTable = FileOperation.ReadDataFile(@"C:\Users\kumar\OneDrive\Documents\Projects\CharMax\CharMax\Datasets\test.d");
+
+            Data data = new Data(dataTable);
+
             AttributeValuePairs attributeValuePairs = new AttributeValuePairs();
-            attributeValuePairs.Pairs = AttributeValuePairs.FindAttributeValuePairs(dataTable);
+            attributeValuePairs.Pairs = AttributeValuePairs.FindAttributeValuePairs(data);
 
             Characteristic characteristic = new Characteristic();
 
-            characteristic.FindCharacteristicSets(dataTable, attributeValuePairs);
+            characteristic.FindCharacteristicSets(data, attributeValuePairs);
 
             MaximalConsistent maximalConsistent = new MaximalConsistent();
 
@@ -28,7 +31,11 @@ namespace CharMax
 
             ProbApprox probApprox = new ProbApprox();
 
-            probApprox.SetConceptProbabilities(dataTable, characteristic);
+            var condProb =probApprox.GetConditionalProbability(data, characteristic, maximalConsistent);
+
+            var conceptApprox = probApprox.GetConceptApprox(characteristic, condProb.CharacteristicCondProb, (float)2/(float)3);
+
+            var mcbApprox = probApprox.GetConceptApprox(maximalConsistent, condProb.MaximalCondProb, (float)2 / (float)4);
         }
     }
 }

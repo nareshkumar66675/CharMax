@@ -46,6 +46,8 @@
     <Compile Include="Helper\Extensions.cs" />
     <Compile Include="Helper\FileOperation.cs" />
     <Compile Include="Models\AttributeValuePair.cs" />
+    <Compile Include="Models\Data.cs" />
+    <Compile Include="Models\Probabilities.cs" />
     <Compile Include="Operations\AttValPairCompute.cs" />
     <Compile Include="Operations\ProbApprox.cs" />
     <Compile Include="Program.cs" />

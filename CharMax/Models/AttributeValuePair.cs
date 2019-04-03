@@ -26,15 +26,15 @@ namespace CharMax.Models
     {
         public List<AttributeValuePair> Pairs { get; set; } = new List<AttributeValuePair>();
 
-        public static List<AttributeValuePair> FindAttributeValuePairs(DataTable dataTable)
+        public static List<AttributeValuePair> FindAttributeValuePairs(Data data)
         {
-            var dataEnumer = dataTable.AsEnumerable();
+            var dataEnumer = data.DataSet.AsEnumerable();
 
             List<AttributeValuePair> pairs = new List<AttributeValuePair>();
 
-            foreach (DataColumn column in dataTable.Columns)
+            foreach (DataColumn column in data.DataSet.Columns)
             {
-                if(column.Ordinal < dataTable.Columns.Count -2)
+                if(column.Ordinal < data.DataSet.Columns.Count -2)
                 {
                     var distinctValues = dataEnumer.FindDistinctValues<string>(column);
 

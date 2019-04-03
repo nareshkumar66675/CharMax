@@ -8,7 +8,8 @@ namespace CharMax.Sets
 {
     class MaximalConsistent
     {
-        public List<List<int>> BMaximal { get; set; } = new List<List<int>>();
+        //{{1},{2,4,8},{2,7}}
+        public List<List<int>> MaximalBlocks { get; set; } = new List<List<int>>();
 
         public Dictionary<int, List<List<int>>> AConsistent { get; set; } = new Dictionary<int, List<List<int>>>();
 
@@ -31,7 +32,7 @@ namespace CharMax.Sets
                 tempBMaximal.Add(blocks);
             }
 
-            BMaximal = FindAndRemoveDuplicateMaximalBlocks(tempBMaximal);
+            MaximalBlocks = FindAndRemoveDuplicateMaximalBlocks(tempBMaximal);
             SetAConsistent(characteristic.CharacteristicSets.Count);
         }
 
@@ -39,7 +40,7 @@ namespace CharMax.Sets
         {
             for (int i = 1; i <= count; i++)
             {
-                AConsistent.Add(i, BMaximal.Where(t => t.Contains(i)).ToList());
+                AConsistent.Add(i, MaximalBlocks.Where(t => t.Contains(i)).ToList());
             }
         }
 
