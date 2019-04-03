@@ -14,7 +14,7 @@ namespace CharMax
     {
         static void Main(string[] args)
         {
-            var dataTable = FileOperation.ReadDataFile(@"C:\Users\kumar\OneDrive\Documents\Projects\CharMax\CharMax\Datasets\test.d");
+            var dataTable = FileOperation.ReadDataFile(@"C:\Users\kumar\OneDrive\Documents\Projects\CharMax\CharMax\Datasets\lymphography-35.d");
 
             Data data = new Data(dataTable);
 
