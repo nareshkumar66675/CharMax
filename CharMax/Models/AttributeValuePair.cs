@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace CharMax.Models
 {
+    /// <summary>
+    /// [(Temperature,medium)]
+    /// </summary>
     class AttributeValue
     {
         public string Attribute { get; set; }
@@ -15,33 +18,31 @@ namespace CharMax.Models
 
     }
 
+    /// <summary>
+    /// [(Temperature,medium)] {1,2,3,4}
+    /// </summary>
     class AttributeValuePair
     {
         public AttributeValue AttributeValue { get; set; } = new AttributeValue();
 
         public List<int> Blocks { get; set; } = new List<int>();
-    }
 
-    class AttributeValuePairs
-    {
-        public List<AttributeValuePair> Pairs { get; set; } = new List<AttributeValuePair>();
-
-        public static List<AttributeValuePair> FindAttributeValuePairs(Data data)
+        public static List<AttributeValuePair> GetAttributeValuePairs(DataTable dataSet)
         {
-            var dataEnumer = data.DataSet.AsEnumerable();
+            var dataEnumer = dataSet.AsEnumerable();
 
             List<AttributeValuePair> pairs = new List<AttributeValuePair>();
 
-            foreach (DataColumn column in data.DataSet.Columns)
+            foreach (DataColumn column in dataSet.Columns)
             {
-                if(column.Ordinal < data.DataSet.Columns.Count -2)
+                if (column.Ordinal < dataSet.Columns.Count - 2)
                 {
                     var distinctValues = dataEnumer.FindDistinctValues<string>(column);
 
                     distinctValues.RemoveAll(t => t == "*" || t == "?");
 
                     var starValues = dataEnumer.FindRecords(column, "*");
-                    
+
                     foreach (var value in distinctValues)
                     {
                         AttributeValuePair attributeValuePair = new AttributeValuePair();
@@ -57,6 +58,6 @@ namespace CharMax.Models
             }
             return pairs;
         }
-
     }
+
 }

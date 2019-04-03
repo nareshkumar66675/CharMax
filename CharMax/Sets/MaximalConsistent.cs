@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CharMax.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,17 +14,22 @@ namespace CharMax.Sets
 
         public Dictionary<int, List<List<int>>> AConsistent { get; set; } = new Dictionary<int, List<List<int>>>();
 
-        public void SetMaximalConsistents(Characteristic characteristic)
+        public MaximalConsistent(Data data)
+        {
+            SetMaximalConsistents(data);
+        }
+
+        public void SetMaximalConsistents(Data data)
         {
             List<List<int>> tempBMaximal = new List<List<int>>();
-            foreach (var set in characteristic.CharacteristicSets)
+            foreach (var set in data.Characteristic.CharacteristicSets)
             {
                 List<int> blocks = new List<int>();
                 
                 foreach (var el in set.Value)
                 {
                     List<int> superset = new List<int>();
-                    characteristic.CharacteristicSets.TryGetValue(el, out superset);
+                    data.Characteristic.CharacteristicSets.TryGetValue(el, out superset);
                     if(CheckSubset(superset, set.Value ))
                     {
                         blocks.Add(el);
@@ -33,7 +39,7 @@ namespace CharMax.Sets
             }
 
             MaximalBlocks = FindAndRemoveDuplicateMaximalBlocks(tempBMaximal);
-            SetAConsistent(characteristic.CharacteristicSets.Count);
+            SetAConsistent(data.Characteristic.CharacteristicSets.Count);
         }
 
         private void SetAConsistent(int count)

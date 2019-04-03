@@ -14,28 +14,17 @@ namespace CharMax
     {
         static void Main(string[] args)
         {
-            var dataTable = FileOperation.ReadDataFile(@"C:\Users\kumar\OneDrive\Documents\Projects\CharMax\CharMax\Datasets\lymphography-35.d");
+            var dataTable = FileOperation.ReadDataFile(@"C:\Users\kumar\OneDrive\Documents\Projects\CharMax\CharMax\Datasets\test.d");
 
             Data data = new Data(dataTable);
 
-            AttributeValuePairs attributeValuePairs = new AttributeValuePairs();
-            attributeValuePairs.Pairs = AttributeValuePairs.FindAttributeValuePairs(data);
-
-            Characteristic characteristic = new Characteristic();
-
-            characteristic.FindCharacteristicSets(data, attributeValuePairs);
-
-            MaximalConsistent maximalConsistent = new MaximalConsistent();
-
-            maximalConsistent.SetMaximalConsistents(characteristic);
-
             ProbApprox probApprox = new ProbApprox();
 
-            var condProb =probApprox.GetConditionalProbability(data, characteristic, maximalConsistent);
+            var condProb =probApprox.GetConditionalProbability(data);
 
-            var conceptApprox = probApprox.GetConceptApprox(characteristic, condProb.CharacteristicCondProb, (float)2/(float)3);
+            var conceptApprox = probApprox.GetConceptApprox(data.Characteristic, condProb.CharacteristicCondProb, (float)2/(float)3);
 
-            var mcbApprox = probApprox.GetConceptApprox(maximalConsistent, condProb.MaximalCondProb, (float)2 / (float)4);
+            var mcbApprox = probApprox.GetConceptApprox(data.MaximalConsistent, condProb.MaximalCondProb, (float)2 / (float)4);
         }
     }
 }

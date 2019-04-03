@@ -13,13 +13,13 @@ namespace CharMax.Operations
     class ProbApprox
     {
 
-        public ConditionalProbability GetConditionalProbability(Data data, Characteristic characteristic, MaximalConsistent maximalConsistent)
+        public ConditionalProbability GetConditionalProbability(Data data)
         {
             ConditionalProbability conditionalProbability = new ConditionalProbability();
 
-            var charTask = Task.Factory.StartNew(() => ComputeConditionalProbability(data,characteristic));
+            var charTask = Task.Factory.StartNew(() => ComputeConditionalProbability(data,data.Characteristic));
 
-            var maxTask = Task.Factory.StartNew(() => ComputeConditionalProbability(data, maximalConsistent));
+            var maxTask = Task.Factory.StartNew(() => ComputeConditionalProbability(data, data.MaximalConsistent));
 
             charTask.Wait();
             maxTask.Wait();

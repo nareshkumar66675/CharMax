@@ -13,8 +13,14 @@ namespace CharMax.Sets
     {
         public Dictionary<int, List<int>> CharacteristicSets { get; set; } = new Dictionary<int, List<int>>();
 
-        public void FindCharacteristicSets(Data data, AttributeValuePairs attributeValuePairs)
+        public Characteristic(Data data)
         {
+            CharacteristicSets = FindCharacteristicSets(data);
+        }
+
+        private Dictionary<int, List<int>> FindCharacteristicSets(Data data)
+        {
+            Dictionary<int, List<int>> tempCharSet = new Dictionary<int, List<int>>();
             foreach (DataRow row in data.DataSet.Rows)
             {
                 List<List<int>> characteristicList = new List<List<int>>();
@@ -28,7 +34,7 @@ namespace CharMax.Sets
                             continue;
                         else
                         {
-                            var block = attributeValuePairs.Pairs.Where(pair => pair.AttributeValue.Attribute == col.ColumnName 
+                            var block = data.AttributeValuePairs.Where(pair => pair.AttributeValue.Attribute == col.ColumnName 
                                 && pair.AttributeValue.Value == value).Select(blocks => blocks.Blocks).FirstOrDefault();
                             characteristicList.Add(block);
                         }
@@ -36,8 +42,10 @@ namespace CharMax.Sets
                 }
                 var set = characteristicList.IntersectAll().ToList();
 
-                CharacteristicSets.Add(int.Parse(row["ID"].ToString()), set);
+                tempCharSet.Add(int.Parse(row["ID"].ToString()), set);
             }
+
+            return tempCharSet;
         }
     }
 }
