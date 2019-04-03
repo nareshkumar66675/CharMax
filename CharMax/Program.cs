@@ -18,13 +18,9 @@ namespace CharMax
 
             Data data = new Data(dataTable);
 
-            ProbApprox probApprox = new ProbApprox();
+            var conceptApprox = ProbApprox.GetConceptApprox(data.Characteristic, data.ConditionalProbability.CharacteristicCondProb, (float)2/(float)3);
 
-            var condProb =probApprox.GetConditionalProbability(data);
-
-            var conceptApprox = probApprox.GetConceptApprox(data.Characteristic, condProb.CharacteristicCondProb, (float)2/(float)3);
-
-            var mcbApprox = probApprox.GetConceptApprox(data.MaximalConsistent, condProb.MaximalCondProb, (float)2 / (float)4);
+            var mcbApprox = ProbApprox.GetConceptApprox(data.MaximalConsistent, data.ConditionalProbability.MaximalCondProb, (float)2 / (float)4);
         }
     }
 }

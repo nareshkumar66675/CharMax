@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace CharMax.Operations
 {
-    class ProbApprox
+    static class ProbApprox
     {
 
-        public ConditionalProbability GetConditionalProbability(Data data)
+        public static ConditionalProbability GetConditionalProbability(Data data)
         {
             ConditionalProbability conditionalProbability = new ConditionalProbability();
 
@@ -38,7 +38,7 @@ namespace CharMax.Operations
 
         //List<Probabilities> Probabilities { get; set; } = new List<Probabilities>();
 
-        public List<Probabilities<int>> ComputeConditionalProbability(Data data, Characteristic characteristic)
+        public static List<Probabilities<int>> ComputeConditionalProbability(Data data, Characteristic characteristic)
         {
             List<Probabilities<int>> conditionalProb = new List<Probabilities<int>>();
 
@@ -61,7 +61,7 @@ namespace CharMax.Operations
             return conditionalProb;
         }
 
-        public List<Probabilities<List<int>>> ComputeConditionalProbability(Data data, MaximalConsistent maximalConsistent)
+        public static List<Probabilities<List<int>>> ComputeConditionalProbability(Data data, MaximalConsistent maximalConsistent)
         {
             List<Probabilities<List<int>>> conditionalProb = new List<Probabilities<List<int>>>();
 
@@ -84,7 +84,14 @@ namespace CharMax.Operations
             return conditionalProb;
         }
 
-        public Dictionary<string,List<int>> GetConceptApprox(Characteristic characteristic, List<Probabilities<int>> conditionalProb, float alpha)
+        /// <summary>
+        /// yes={1,2,3,4,6,7}
+        /// </summary>
+        /// <param name="characteristic"></param>
+        /// <param name="conditionalProb"></param>
+        /// <param name="alpha"></param>
+        /// <returns></returns>
+        public static Dictionary<string,List<int>> GetConceptApprox(Characteristic characteristic, List<Probabilities<int>> conditionalProb, float alpha)
         {
             Dictionary<string, List<int>> tempApprox = new Dictionary<string, List<int>>();
             foreach (var prob in conditionalProb)
@@ -100,7 +107,7 @@ namespace CharMax.Operations
             return tempApprox;
         }
 
-        public Dictionary<string, List<int>> GetConceptApprox(MaximalConsistent maximalConsistent, List<Probabilities<List<int>>> conditionalProb, float alpha)
+        public static Dictionary<string, List<int>> GetConceptApprox(MaximalConsistent maximalConsistent, List<Probabilities<List<int>>> conditionalProb, float alpha)
         {
             Dictionary<string, List<int>> tempApprox = new Dictionary<string, List<int>>();
             foreach (var prob in conditionalProb)
@@ -122,7 +129,7 @@ namespace CharMax.Operations
         /// <param name="SetA"></param>
         /// <param name="SetB"></param>
         /// <returns></returns>
-        private float FindProbability(List<int> SetA, List<int> SetB)
+        private static float FindProbability(List<int> SetA, List<int> SetB)
         {
             return (float)SetA.Intersect(SetB).Count() / (float)SetA.Count;
         }

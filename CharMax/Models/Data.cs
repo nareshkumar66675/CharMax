@@ -1,4 +1,5 @@
 ﻿using CharMax.Helper;
+using CharMax.Operations;
 using CharMax.Sets;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace CharMax.Models
         public List<AttributeValuePair> AttributeValuePairs { get; set; } = new List<AttributeValuePair>();
         public Characteristic Characteristic { get; set; } 
         public MaximalConsistent MaximalConsistent { get; set; }
+        public ConditionalProbability ConditionalProbability { get; set; }
 
         public Data(DataTable dataSet)
         {
@@ -24,6 +26,7 @@ namespace CharMax.Models
             AttributeValuePairs = AttributeValuePair.GetAttributeValuePairs(dataSet);
             Characteristic = new Characteristic(this);
             MaximalConsistent = new MaximalConsistent(this);
+            ConditionalProbability = ProbApprox.GetConditionalProbability(this);
         }
 
         private Dictionary<string, List<int>> FindDecisions()

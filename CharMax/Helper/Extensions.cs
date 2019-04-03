@@ -43,5 +43,10 @@ namespace CharMax.Helper
         {
             return dataEnumer.Select(r => r.Field<TSource>(column)).Distinct().ToList();
         }
+
+        public static bool CheckSubset(this List<int> SuperSet, List<int> SubSet)
+        {
+            return !SubSet.Except(SuperSet).Any();
+        }
     }
 }
