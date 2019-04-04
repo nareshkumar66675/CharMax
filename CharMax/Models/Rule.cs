@@ -11,5 +11,7 @@ namespace CharMax.Models
         public KeyValuePair<string, List<int>> Decision { get; set; } = new KeyValuePair<string, List<int>>();
 
         public List<AttributeValuePair> Rules { get; set; } = new List<AttributeValuePair>();
+
+        public List<int> Covers { get; set; } = new List<int>();
     }
 }

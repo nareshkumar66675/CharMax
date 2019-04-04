@@ -48,8 +48,10 @@
     <Compile Include="Models\AttributeValuePair.cs" />
     <Compile Include="Models\Data.cs" />
     <Compile Include="Models\Probabilities.cs" />
+    <Compile Include="Models\Rule.cs" />
     <Compile Include="Operations\AttValPairCompute.cs" />
     <Compile Include="Operations\ProbApprox.cs" />
+    <Compile Include="Operations\RuleInduction.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sets\Characteristic.cs" />

@@ -16,6 +16,31 @@ namespace CharMax.Models
         public string Attribute { get; set; }
         public string Value { get; set; }
 
+        public override bool Equals(object obj)
+        {
+            var value = obj as AttributeValue;
+            return value != null &&
+                   Attribute == value.Attribute &&
+                   Value == value.Value;
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = -1299389615;
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Attribute);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Value);
+            return hashCode;
+        }
+
+        public static bool operator ==(AttributeValue value1, AttributeValue value2)
+        {
+            return EqualityComparer<AttributeValue>.Default.Equals(value1, value2);
+        }
+
+        public static bool operator !=(AttributeValue value1, AttributeValue value2)
+        {
+            return !(value1 == value2);
+        }
     }
 
     /// <summary>
