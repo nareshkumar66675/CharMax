@@ -14,17 +14,17 @@ namespace CharMax
     {
         static void Main(string[] args)
         {
-            var dataTable = FileOperation.ReadDataFile(@"C:\Users\kumar\OneDrive\Documents\Projects\CharMax\CharMax\Datasets\test.d");
+            var dataTable = FileOperation.ReadDataFile(@"C:\Users\kumar\OneDrive\Documents\Projects\CharMax\CharMax\Datasets\lymphography-35.d");
 
             Data data = new Data(dataTable);
 
-            //var conceptApprox = ProbApprox.GetConceptApprox(data.Characteristic, data.ConditionalProbability.CharacteristicCondProb, (float)4/(float)4);
+            var conceptApprox = ProbApprox.GetConceptApprox(data.Characteristic, data.ConditionalProbability.CharacteristicCondProb, (float)2/(float)4);
 
             var mcbApprox = ProbApprox.GetConceptApprox(data.MaximalConsistent, data.ConditionalProbability.MaximalCondProb, (float)4 / (float)4);
 
             RuleInduction ruleInduction = new RuleInduction();
 
-            ruleInduction.ComputeRules(data, data.AttributeValuePairs, mcbApprox);
+            ruleInduction.ComputeRules(data, data.AttributeValuePairs, conceptApprox);
         }
     }
 }
