@@ -22,7 +22,7 @@ namespace CharMax.Operations
                 {
                     computedRules.Add(new KeyValuePair<string, Rule>(probBlocks.Key, rul));
 
-                    probBlocks
+                    //probBlocks
                 }
             }
         }
