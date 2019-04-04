@@ -15,17 +15,42 @@ namespace CharMax.Operations
             List<KeyValuePair<string, Rule>> computedRules = new List<KeyValuePair<string, Rule>>();
             foreach (var probBlocks in probApprox)
             {
-
-                var rul = RecursiveRuleInduction(data, attributeValuePairs, probBlocks, null);
-
-                if(rul!=null)
+                Rule rule;
+                List<int> decisionBlock;
+                data.Decisions.TryGetValue(probBlocks.Key, out decisionBlock);
+                var itrProbBlocks = probBlocks;
+                List<int> covered = new List<int>();
+                while (true)
                 {
-                    computedRules.Add(new KeyValuePair<string, Rule>(probBlocks.Key, rul));
+                    rule = RecursiveRuleInduction(data, attributeValuePairs, itrProbBlocks, null);
+                    if (rule != null)
+                    {
+                        computedRules.Add(new KeyValuePair<string, Rule>(probBlocks.Key, rule));
 
-                    //probBlocks
+                        covered.AddRange(rule.Covers);
+
+                        
+
+                        var remaining = decisionBlock.Except(covered.Distinct()).ToList();
+
+                        itrProbBlocks = new KeyValuePair<string, List<int>>(probBlocks.Key, remaining);
+
+                        if (remaining.Count == 0)
+                        {
+                            break;
+                        }
+                    }
+                    else
+                        break;
                 }
+
             }
+
+
         }
+
+
+
 
         public Rule RecursiveRuleInduction(Data data, List<AttributeValuePair> attributeValuePairs, 
             KeyValuePair<string,List<int>> probBlocks, Rule tempRules)
