@@ -10,7 +10,7 @@ namespace CharMax.Operations
 {
     class RuleInduction
     {
-        public void ComputeRules(Data data, List<AttributeValuePair> attributeValuePairs, Dictionary<string, List<int>> probApprox)
+        public List<KeyValuePair<string, Rule>> ComputeRules(Data data, List<AttributeValuePair> attributeValuePairs, Dictionary<string, List<int>> probApprox)
         {
             List<KeyValuePair<string, Rule>> computedRules = new List<KeyValuePair<string, Rule>>();
             foreach (var probBlocks in probApprox)
@@ -43,6 +43,8 @@ namespace CharMax.Operations
                 }
 
             }
+
+            return DropRules(computedRules);
         }
 
         public Rule RecursiveRuleInduction(Data data, List<AttributeValuePair> attributeValuePairs, 
@@ -114,7 +116,7 @@ namespace CharMax.Operations
                 var rules = CheckSubsets(tempRules, originalProbBlocks);
                 if(rules!=null)
                 {
-                    tempRules.Covers = tempRules.Decision.Value.Intersect(rules.Select(t=>t.Blocks).IntersectAll()).ToList();
+                    tempRules.Covers = originalProbBlocks.Value.Intersect(rules.Select(t=>t.Blocks).IntersectAll()).ToList();
                     tempRules.Rules = rules;
                     return tempRules;
                 }
@@ -132,6 +134,26 @@ namespace CharMax.Operations
 
         }
 
+        private List<KeyValuePair<string, Rule>> DropRules(List<KeyValuePair<string, Rule>> Rules)
+        {
+            List<KeyValuePair<string, Rule>> duplicateRules = new List<KeyValuePair<string, Rule>>();
+
+            for (int i = 0; i < Rules.Count; i++)
+            {
+                for (int j = 0; j < Rules.Count; j++)
+                {
+                    if (i == j)
+                        continue;
+                    if(Rules[j].Value.Covers.CheckSubset(Rules[i].Value.Covers))
+                    {
+                        duplicateRules.Add(Rules[i]);
+                        break;
+                    }
+                }
+            }
+
+            return Rules;
+        }
 
         private List<AttributeValuePair> CheckSubsets(Rule tempRules, KeyValuePair<string, List<int>> originalProbBlocks)
         {

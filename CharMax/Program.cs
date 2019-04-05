@@ -20,11 +20,25 @@ namespace CharMax
 
             var conceptApprox = ProbApprox.GetConceptApprox(data.Characteristic, data.ConditionalProbability.CharacteristicCondProb, (float)2/(float)4);
 
-            var mcbApprox = ProbApprox.GetConceptApprox(data.MaximalConsistent, data.ConditionalProbability.MaximalCondProb, (float)4 / (float)4);
+            var mcbApprox = ProbApprox.GetConceptApprox(data.MaximalConsistent, data.ConditionalProbability.MaximalCondProb, (float)4 / (float)40);
 
             RuleInduction ruleInduction = new RuleInduction();
 
-            ruleInduction.ComputeRules(data, data.AttributeValuePairs, conceptApprox);
+            var rules = ruleInduction.ComputeRules(data, data.AttributeValuePairs, mcbApprox);
+
+            PrintRules(rules);
+        }
+
+        static void PrintRules(List<KeyValuePair<string, Rule>> Rules)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (var item in Rules)
+            {
+                var temp = item.Value.Rules.Select(t => "(" + t.AttributeValue.Attribute + "," + t.AttributeValue.Value + ")");
+                sb.AppendLine($"{string.Join(",", temp.ToList())} ---------- {item.Key}");
+            }
+
+            Console.Write(sb.ToString());
         }
     }
 }
