@@ -24,12 +24,7 @@ namespace CharMax
 
             RuleInduction ruleInductionCharacteristic = new RuleInduction();
 
-            //var charRules = ruleInductionCharacteristic.ComputeRules(data, data.AttributeValuePairs, charApprox);
-
             RuleInduction ruleInductionMCB = new RuleInduction();
-
-            //var mcbRules = ruleInductionMCB.ComputeRules(data, data.AttributeValuePairs, mcbApprox);
-
 
             var charTask = Task.Factory.StartNew(()=> ruleInductionCharacteristic.ComputeRules(data, data.AttributeValuePairs, charApprox));
             var mcBTask = Task.Factory.StartNew(() => ruleInductionMCB.ComputeRules(data, data.AttributeValuePairs, mcbApprox));
@@ -38,8 +33,12 @@ namespace CharMax
 
             var charRule = charTask.Result;
             var mcbRule = mcBTask.Result;
-
+            Console.WriteLine("Rules - Characteristic Set");
             PrintRules(charRule);
+
+            Console.WriteLine("\n\n\n End of Characteristic Rules \n \n");
+            Console.WriteLine("Rules - MCB");
+            PrintRules(mcbRule);
         }
 
         static void PrintRules(List<KeyValuePair<string, Rule>> Rules)
