@@ -10,7 +10,7 @@ namespace CharMax.Operations
 {
     class RuleInduction
     {
-        public void ComputeRules(Data data, List<AttributeValuePair> attributeValuePairs, Dictionary<string, List<int>> probApprox)
+        public List<KeyValuePair<string, Rule>> ComputeRules(Data data, List<AttributeValuePair> attributeValuePairs, Dictionary<string, List<int>> probApprox)
         {
             List<KeyValuePair<string, Rule>> computedRules = new List<KeyValuePair<string, Rule>>();
             foreach (var probBlocks in probApprox)
@@ -46,7 +46,7 @@ namespace CharMax.Operations
 
             }
 
-
+            return computedRules;
         }
 
 

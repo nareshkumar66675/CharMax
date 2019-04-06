@@ -18,13 +18,26 @@ namespace CharMax
 
             Data data = new Data(dataTable);
 
-            var conceptApprox = ProbApprox.GetConceptApprox(data.Characteristic, data.ConditionalProbability.CharacteristicCondProb, (float)6/(float)10);
+            var charApprox = ProbApprox.GetConceptApprox(data.Characteristic, data.ConditionalProbability.CharacteristicCondProb, (float)6/(float)10);
 
             var mcbApprox = ProbApprox.GetConceptApprox(data.MaximalConsistent, data.ConditionalProbability.MaximalCondProb, (float)6 / (float)10);
 
-            RuleInduction ruleInduction = new RuleInduction();
+            RuleInduction ruleInductionCharacteristic = new RuleInduction();
 
-            ruleInduction.ComputeRules(data, data.AttributeValuePairs, conceptApprox);
+            //var charRules = ruleInductionCharacteristic.ComputeRules(data, data.AttributeValuePairs, charApprox);
+
+            RuleInduction ruleInductionMCB = new RuleInduction();
+
+            //var mcbRules = ruleInductionMCB.ComputeRules(data, data.AttributeValuePairs, mcbApprox);
+
+
+            var charTask = Task.Factory.StartNew(()=> ruleInductionCharacteristic.ComputeRules(data, data.AttributeValuePairs, charApprox));
+            var mcBTask = Task.Factory.StartNew(() => ruleInductionMCB.ComputeRules(data, data.AttributeValuePairs, mcbApprox));
+
+            Task.WaitAll(charTask,mcBTask);
+
+            var charRule = charTask.Result;
+            var mcbRule = mcBTask.Result;
         }
     }
 }
