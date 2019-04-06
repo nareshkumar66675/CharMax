@@ -27,11 +27,9 @@ namespace CharMax.Operations
                     {
                         computedRules.Add(new KeyValuePair<string, Rule>(probBlocks.Key, rule));
 
-                        covered.AddRange(rule.Covers);
+                        covered.AddRange(rule.Covers);                  
 
-                        
-
-                        var remaining = probBlocks.Value.Except(covered.Distinct()).ToList();
+                        var remaining = decisionBlock.Except(covered.Distinct()).ToList();
 
                         itrProbBlocks = new KeyValuePair<string, List<int>>(probBlocks.Key, remaining);
 
@@ -89,13 +87,13 @@ namespace CharMax.Operations
             if (tempRules == null)
             {
                 //Check if the attribute is subset - FIRST Iteration
-                if(originalProbBlocks.Value.CheckSubset(selectedAttrValPair.Blocks))
+                if(decision.CheckSubset(selectedAttrValPair.Blocks))
                 {
                     Rule rule = new Rule();
                     rule.Decision = data.Decisions.Where(t => t.Key == probBlocks.Key).First();
                     rule.Rules.Add(selectedAttrValPair);
 
-                    rule.Covers = originalProbBlocks.Value.Intersect(selectedAttrValPair.Blocks).ToList();
+                    rule.Covers = decision.Intersect(selectedAttrValPair.Blocks).ToList();
 
                     return rule;
                 }
@@ -121,7 +119,7 @@ namespace CharMax.Operations
                 var rules = CheckSubsets(tempRules, originalProbBlocks);
                 if(rules!=null)
                 {
-                    tempRules.Covers = originalProbBlocks.Value.Intersect(rules.Select(t=>t.Blocks).IntersectAll()).ToList();
+                    tempRules.Covers = decision.Intersect(rules.Select(t=>t.Blocks).IntersectAll()).ToList();
                     tempRules.Rules = rules;
                     return tempRules;
                 }
@@ -164,7 +162,7 @@ namespace CharMax.Operations
         {
             for (int i = 0; i < tempRules.Rules.Count; i++)
             {
-                if (originalProbBlocks.Value.CheckSubset(tempRules.Rules[i].Blocks))
+                if (tempRules.Decision.Value.CheckSubset(tempRules.Rules[i].Blocks))
                 {
                     List<AttributeValuePair> rul = new List<AttributeValuePair>();
                     rul.Add(tempRules.Rules[i]);
@@ -186,7 +184,7 @@ namespace CharMax.Operations
                     tempList.Add(tempRules.Rules[j]);
                     var newIntersectBlock = tempList.Select(t => t.Blocks).IntersectAll().ToList() ;
 
-                    if (originalProbBlocks.Value.CheckSubset(newIntersectBlock))
+                    if (tempRules.Decision.Value.CheckSubset(newIntersectBlock))
                     {
                         isSubset = true;
                         break;
