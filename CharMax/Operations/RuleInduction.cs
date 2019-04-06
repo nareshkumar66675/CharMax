@@ -15,9 +15,9 @@ namespace CharMax.Operations
             List<KeyValuePair<string, Rule>> computedRules = new List<KeyValuePair<string, Rule>>();
             foreach (var probBlocks in probApprox)
             {
-
                 Rule rule;
-
+                List<int> decisionBlock;
+                data.Decisions.TryGetValue(probBlocks.Key, out decisionBlock);
                 var itrProbBlocks = probBlocks;
                 List<int> covered = new List<int>();
                 while (true)
@@ -28,6 +28,8 @@ namespace CharMax.Operations
                         computedRules.Add(new KeyValuePair<string, Rule>(probBlocks.Key, rule));
 
                         covered.AddRange(rule.Covers);
+
+                        
 
                         var remaining = probBlocks.Value.Except(covered.Distinct()).ToList();
 
@@ -46,6 +48,9 @@ namespace CharMax.Operations
 
             return DropRules(computedRules);
         }
+
+
+
 
         public Rule RecursiveRuleInduction(Data data, List<AttributeValuePair> attributeValuePairs, 
             KeyValuePair<string,List<int>> probBlocks, Rule tempRules, KeyValuePair<string, List<int>> originalProbBlocks)

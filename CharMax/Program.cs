@@ -14,19 +14,32 @@ namespace CharMax
     {
         static void Main(string[] args)
         {
-            var dataTable = FileOperation.ReadDataFile(@"C:\Users\kumar\OneDrive\Documents\Projects\CharMax\CharMax\Datasets\lymphography-35.d");
+            var dataTable = FileOperation.ReadDataFile(@"C:\Users\kumar\OneDrive\Documents\Projects\CharMax\CharMax\Datasets\breast-35.d");
 
             Data data = new Data(dataTable);
 
-            var conceptApprox = ProbApprox.GetConceptApprox(data.Characteristic, data.ConditionalProbability.CharacteristicCondProb, (float)2/(float)4);
+            var charApprox = ProbApprox.GetConceptApprox(data.Characteristic, data.ConditionalProbability.CharacteristicCondProb, (float)6/(float)10);
 
-            var mcbApprox = ProbApprox.GetConceptApprox(data.MaximalConsistent, data.ConditionalProbability.MaximalCondProb, (float)4 / (float)40);
+            var mcbApprox = ProbApprox.GetConceptApprox(data.MaximalConsistent, data.ConditionalProbability.MaximalCondProb, (float)6 / (float)10);
 
-            RuleInduction ruleInduction = new RuleInduction();
+            RuleInduction ruleInductionCharacteristic = new RuleInduction();
 
-            var rules = ruleInduction.ComputeRules(data, data.AttributeValuePairs, mcbApprox);
+            //var charRules = ruleInductionCharacteristic.ComputeRules(data, data.AttributeValuePairs, charApprox);
 
-            PrintRules(rules);
+            RuleInduction ruleInductionMCB = new RuleInduction();
+
+            //var mcbRules = ruleInductionMCB.ComputeRules(data, data.AttributeValuePairs, mcbApprox);
+
+
+            var charTask = Task.Factory.StartNew(()=> ruleInductionCharacteristic.ComputeRules(data, data.AttributeValuePairs, charApprox));
+            var mcBTask = Task.Factory.StartNew(() => ruleInductionMCB.ComputeRules(data, data.AttributeValuePairs, mcbApprox));
+
+            Task.WaitAll(charTask,mcBTask);
+
+            var charRule = charTask.Result;
+            var mcbRule = mcBTask.Result;
+
+            PrintRules(charRule);
         }
 
         static void PrintRules(List<KeyValuePair<string, Rule>> Rules)
