@@ -14,7 +14,7 @@ namespace CharMax
     {
         static void Main(string[] args)
         {
-            var dataTable = FileOperation.ReadDataFile(@"C:\Users\kumar\OneDrive\Documents\Projects\CharMax\CharMax\Datasets\lymphography-35.d");
+            var dataTable = FileOperation.ReadDataFile(@"C:\Users\kumar\OneDrive\Documents\Projects\CharMax\CharMax\Datasets\breast-35.d");
 
             Data data = new Data(dataTable);
 
@@ -24,7 +24,7 @@ namespace CharMax
 
             RuleInduction ruleInduction = new RuleInduction();
 
-            ruleInduction.ComputeRules(data, data.AttributeValuePairs, mcbApprox);
+            ruleInduction.ComputeRules(data, data.AttributeValuePairs, conceptApprox);
         }
     }
 }

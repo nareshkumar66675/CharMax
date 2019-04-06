@@ -39,6 +39,11 @@ namespace CharMax.Helper
             return dataSet.AsEnumerable().Select(r => r.Field<TSource>(index)).Distinct().ToList();
         }
 
+        public static List<TSource> FindDistinctValues<TSource>(this DataTable dataSet, string columnName)
+        {
+            return dataSet.AsEnumerable().Select(r => r.Field<TSource>(columnName)).Distinct().ToList();
+        }
+
         public static List<TSource> FindDistinctValues<TSource>(this EnumerableRowCollection<DataRow> dataEnumer, DataColumn column)
         {
             return dataEnumer.Select(r => r.Field<TSource>(column)).Distinct().ToList();
