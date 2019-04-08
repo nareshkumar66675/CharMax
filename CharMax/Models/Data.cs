@@ -57,8 +57,10 @@ namespace CharMax.Models
                     {
                         cutPoints.Add((distinctValues[i] + distinctValues[i + 1]) / 2f);
                     }
+                    cutPoints = cutPoints.Distinct().ToList();
 
                     CutPoints.Add(column.Key, cutPoints);
+
 
                     var min = distinctValues[0];
                     var max = distinctValues[distinctValues.Count - 1];
