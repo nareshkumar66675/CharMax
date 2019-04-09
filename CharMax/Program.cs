@@ -88,32 +88,38 @@ namespace CharMax
             {
                 var dataTable = FileOperation.ReadDataFile(file);
                 Data data = new Data(dataTable);
-
-                for (float alphaValue = 0.0f; alphaValue <= 1.0f; alphaValue = (float)Math.Round(alphaValue + 0.10f, 1))
+                var alphaValue = 0.5f;
+                //for (float alphaValue = 0.0f; alphaValue <= 1.0f; alphaValue = (float)Math.Round(alphaValue + 0.10f, 1))
                 {
                     RuleInduction ruleInductionCharacteristic = new RuleInduction();
 
                     RuleInduction ruleInductionMCB = new RuleInduction();
-                    var charTask = Task.Factory.StartNew(() =>
-                    {
-                        var charApprox = ProbApprox.GetConceptApprox(data.Characteristic, data.ConditionalProbability.CharacteristicCondProb, alphaValue);
-                        return ruleInductionCharacteristic.ComputeRules(data, data.AttributeValuePairs, charApprox);
-                    });
+                    //var charTask = Task.Factory.StartNew(() =>
+                    //{
+                    //    var charApprox = ProbApprox.GetConceptApprox(data.Characteristic, data.ConditionalProbability.CharacteristicCondProb, alphaValue);
+                    //    return ruleInductionCharacteristic.ComputeRules(data, data.AttributeValuePairs, charApprox);
+                    //});
 
-                    var mcBTask = Task.Factory.StartNew(() =>
-                    {
-                        var mcbApprox = ProbApprox.GetConceptApprox(data.MaximalConsistent, data.ConditionalProbability.MaximalCondProb, alphaValue);
-                        return ruleInductionMCB.ComputeRules(data, data.AttributeValuePairs, mcbApprox);
-                    });
+                    //var mcBTask = Task.Factory.StartNew(() =>
+                    //{
+                    //    var mcbApprox = ProbApprox.GetConceptApprox(data.MaximalConsistent, data.ConditionalProbability.MaximalCondProb, alphaValue);
+                    //    return ruleInductionMCB.ComputeRules(data, data.AttributeValuePairs, mcbApprox);
+                    //});
 
-                    Task.WaitAll(charTask, mcBTask);
+                    //Task.WaitAll(charTask, mcBTask);
 
-                    var charRule = charTask.Result;
-                    var mcbRule = mcBTask.Result;
+                    //var charRule = charTask.Result;
+                    //var mcbRule = mcBTask.Result;
 
-                    Rules rules = new Rules(Path.GetFileNameWithoutExtension(file), alphaValue, charRule, mcbRule);
+                    var charApprox = ProbApprox.GetConceptApprox(data.Characteristic, data.ConditionalProbability.CharacteristicCondProb, alphaValue);
+                    var r = ruleInductionCharacteristic.ComputeRules(data, data.AttributeValuePairs, charApprox);
 
-                    AllRules.Add(rules);
+                    var mcbApprox = ProbApprox.GetConceptApprox(data.MaximalConsistent, data.ConditionalProbability.MaximalCondProb, alphaValue);
+                    var r1=  ruleInductionMCB.ComputeRules(data, data.AttributeValuePairs, mcbApprox);
+
+                    //Rules rules = new Rules(Path.GetFileNameWithoutExtension(file), alphaValue, charRule, mcbRule);
+
+                    //AllRules.Add(rules);
 
                 }
             }

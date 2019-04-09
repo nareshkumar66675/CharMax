@@ -45,8 +45,9 @@ namespace CharMax.Operations
             foreach (var decision in data.Decisions)
             {
                 Dictionary<int, float> tempProbs = new Dictionary<int, float>();
-                foreach (var characteristicValues in characteristic.CharacteristicSets)
+                foreach (var characteristicValues in characteristic.CharacteristicSets.Where(t => decision.Value.Contains(t.Key)))
                 {
+                    //if()
                     tempProbs.Add(characteristicValues.Key, FindProbability(characteristicValues.Value, decision.Value));
                 }
                 Probabilities<int> tempProbabilities = new Probabilities<int>
