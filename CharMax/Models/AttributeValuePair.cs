@@ -11,7 +11,7 @@ namespace CharMax.Models
     /// <summary>
     /// [(Temperature,medium)]
     /// </summary>
-    class AttributeValue
+    public class AttributeValue
     {
         public string Attribute { get; set; }
         public string Value { get; set; }
@@ -46,7 +46,7 @@ namespace CharMax.Models
     /// <summary>
     /// [(Temperature,medium)] {1,2,3,4}
     /// </summary>
-    class AttributeValuePair
+    public class AttributeValuePair
     {
         public AttributeValue AttributeValue { get; set; } = new AttributeValue();
 

@@ -3,7 +3,10 @@ using CharMax.Models;
 using CharMax.Operations;
 using CharMax.Sets;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,32 +17,118 @@ namespace CharMax
     {
         static void Main(string[] args)
         {
-            var dataTable = FileOperation.ReadDataFile(@"C:\Users\kumar\OneDrive\Documents\Projects\CharMax\CharMax\Datasets\breast-35.d");
+            //var dataTable = FileOperation.ReadDataFile(@"C:\Users\kumar\OneDrive\Documents\Projects\CharMax\CharMax\Datasets\breast-35.d");
 
-            Data data = new Data(dataTable);
+            var files = Directory.GetFiles(ConfigurationManager.AppSettings["DataSetFolder"],"*.d",SearchOption.TopDirectoryOnly);
+            ConcurrentBag<Rules> AllRules = new ConcurrentBag<Rules>();
 
-            var charApprox = ProbApprox.GetConceptApprox(data.Characteristic, data.ConditionalProbability.CharacteristicCondProb, (float)6/(float)10);
+            //Parallel.ForEach(files, file =>
+            //{
+            //    var dataTable = FileOperation.ReadDataFile(file);
+            //    Data data = new Data(dataTable);
+            //    var alphaValue = 0.0f;
+            //    Parallel.For(0, 12, alpha =>
+            //    {
+            //        alphaValue = (float)Math.Round(alphaValue + 0.10f, 1);
+            //        RuleInduction ruleInductionCharacteristic = new RuleInduction();
 
-            var mcbApprox = ProbApprox.GetConceptApprox(data.MaximalConsistent, data.ConditionalProbability.MaximalCondProb, (float)6 / (float)10);
+            //        RuleInduction ruleInductionMCB = new RuleInduction();
+            //        var charTask = Task.Factory.StartNew(() =>
+            //        {
+            //            var charApprox = ProbApprox.GetConceptApprox(data.Characteristic, data.ConditionalProbability.CharacteristicCondProb, alphaValue);
+            //            return ruleInductionCharacteristic.ComputeRules(data, data.AttributeValuePairs, charApprox);
+            //        });
 
-            RuleInduction ruleInductionCharacteristic = new RuleInduction();
+            //        var mcBTask = Task.Factory.StartNew(() =>
+            //        {
+            //            var mcbApprox = ProbApprox.GetConceptApprox(data.MaximalConsistent, data.ConditionalProbability.MaximalCondProb, alphaValue);
+            //            return ruleInductionMCB.ComputeRules(data, data.AttributeValuePairs, mcbApprox);
+            //        });
 
-            //var charRules = ruleInductionCharacteristic.ComputeRules(data, data.AttributeValuePairs, charApprox);
+            //        Task.WaitAll(charTask, mcBTask);
 
-            RuleInduction ruleInductionMCB = new RuleInduction();
+            //        var charRule = charTask.Result;
+            //        var mcbRule = mcBTask.Result;
 
-            //var mcbRules = ruleInductionMCB.ComputeRules(data, data.AttributeValuePairs, mcbApprox);
+            //        Rules rules = new Rules(Path.GetFileNameWithoutExtension(file), alphaValue, charRule, mcbRule);
+
+            //        AllRules.Add(rules);
+            //    });
+
+            //for (float alphaValue = 0.0f; alphaValue <= 1.0f; alphaValue = (float)Math.Round(alphaValue + 0.10f, 1))
+            //{
+            //    //RuleInduction ruleInductionCharacteristic = new RuleInduction();
+
+            //    //RuleInduction ruleInductionMCB = new RuleInduction();
+            //    //var charTask = Task.Factory.StartNew(() =>
+            //    //{
+            //    //    var charApprox = ProbApprox.GetConceptApprox(data.Characteristic, data.ConditionalProbability.CharacteristicCondProb, alphaValue);
+            //    //    return ruleInductionCharacteristic.ComputeRules(data, data.AttributeValuePairs, charApprox);
+            //    //});
+
+            //    //var mcBTask = Task.Factory.StartNew(() =>
+            //    //{
+            //    //    var mcbApprox = ProbApprox.GetConceptApprox(data.MaximalConsistent, data.ConditionalProbability.MaximalCondProb, alphaValue);
+            //    //    return ruleInductionMCB.ComputeRules(data, data.AttributeValuePairs, mcbApprox);
+            //    //});
+
+            //    //Task.WaitAll(charTask, mcBTask);
+
+            //    //var charRule = charTask.Result;
+            //    //var mcbRule = mcBTask.Result;
+
+            //    //Rules rules = new Rules(Path.GetFileNameWithoutExtension(file), alphaValue, charRule, mcbRule);
+
+            //    //AllRules.Add(rules);
+
+            //}
+            //});
+
+            foreach (var file in files)
+            {
+                var dataTable = FileOperation.ReadDataFile(file);
+                Data data = new Data(dataTable);
+
+                for (float alphaValue = 0.0f; alphaValue <= 1.0f; alphaValue = (float)Math.Round(alphaValue + 0.10f, 1))
+                {
+                    RuleInduction ruleInductionCharacteristic = new RuleInduction();
+
+                    RuleInduction ruleInductionMCB = new RuleInduction();
+                    var charTask = Task.Factory.StartNew(() =>
+                    {
+                        var charApprox = ProbApprox.GetConceptApprox(data.Characteristic, data.ConditionalProbability.CharacteristicCondProb, alphaValue);
+                        return ruleInductionCharacteristic.ComputeRules(data, data.AttributeValuePairs, charApprox);
+                    });
+
+                    var mcBTask = Task.Factory.StartNew(() =>
+                    {
+                        var mcbApprox = ProbApprox.GetConceptApprox(data.MaximalConsistent, data.ConditionalProbability.MaximalCondProb, alphaValue);
+                        return ruleInductionMCB.ComputeRules(data, data.AttributeValuePairs, mcbApprox);
+                    });
+
+                    Task.WaitAll(charTask, mcBTask);
+
+                    var charRule = charTask.Result;
+                    var mcbRule = mcBTask.Result;
+
+                    Rules rules = new Rules(Path.GetFileNameWithoutExtension(file), alphaValue, charRule, mcbRule);
+
+                    AllRules.Add(rules);
+
+                }
+            }
 
 
-            var charTask = Task.Factory.StartNew(()=> ruleInductionCharacteristic.ComputeRules(data, data.AttributeValuePairs, charApprox));
-            var mcBTask = Task.Factory.StartNew(() => ruleInductionMCB.ComputeRules(data, data.AttributeValuePairs, mcbApprox));
+            RuleStat ruleStat = new RuleStat();
 
-            Task.WaitAll(charTask,mcBTask);
+            ruleStat.SaveRuleStat(AllRules.ToList());
 
-            var charRule = charTask.Result;
-            var mcbRule = mcBTask.Result;
+            //Console.WriteLine("Rules - Characteristic Set");
+            //PrintRules(charRule);
 
-            PrintRules(charRule);
+            //Console.WriteLine("\n\n\n End of Characteristic Rules \n \n");
+            //Console.WriteLine("Rules - MCB");
+            //PrintRules(mcbRule);
         }
 
         static void PrintRules(List<KeyValuePair<string, Rule>> Rules)
