@@ -46,7 +46,7 @@ namespace CharMax.Operations
 
             }
 
-            return DropRules(computedRules);
+            return DropConditions(computedRules);
         }
 
 
@@ -93,7 +93,7 @@ namespace CharMax.Operations
                 {
                     Rule rule = new Rule();
                     rule.Decision = data.Decisions.Where(t => t.Key == probBlocks.Key).First();
-                    rule.Rules.Add(selectedAttrValPair);
+                    rule.Conditions.Add(selectedAttrValPair);
 
                     rule.Covers = originalProbBlocks.Value.Intersect(selectedAttrValPair.Blocks).ToList();
 
@@ -104,7 +104,7 @@ namespace CharMax.Operations
                 {
                     tempRules = new Rule();
                     tempRules.Decision = data.Decisions.Where(t => t.Key == probBlocks.Key).First();
-                    tempRules.Rules.Add(selectedAttrValPair);
+                    tempRules.Conditions.Add(selectedAttrValPair);
 
                     var nextItrProbBlocks = new List<int>(maxMatchingBlocks.Where(t => t.AttributeValue == selectedAttrValPair.AttributeValue).First().Blocks);
                     tempMatchingBlocks.Where(t => t.AttributeValue == selectedAttrValPair.AttributeValue).First().Blocks = new List<int>();
@@ -115,14 +115,14 @@ namespace CharMax.Operations
             }
             else
             {
-                tempRules.Rules.Add(selectedAttrValPair);
+                tempRules.Conditions.Add(selectedAttrValPair);
 
                 //var newUnionBlock = tempRules.Rules.Select(t => t.Blocks).IntersectAll().ToList();
                 var rules = CheckSubsets(tempRules, originalProbBlocks);
                 if(rules!=null)
                 {
                     tempRules.Covers = originalProbBlocks.Value.Intersect(rules.Select(t=>t.Blocks).IntersectAll()).ToList();
-                    tempRules.Rules = rules;
+                    tempRules.Conditions = rules;
                     return tempRules;
                 }
                 else
@@ -134,8 +134,6 @@ namespace CharMax.Operations
                     return RecursiveRuleInduction(data, tempMatchingBlocks, new KeyValuePair<string, List<int>>(tempRules.Decision.Key, nextItrProbBlocks), tempRules,originalProbBlocks);
                 }
             }
-
-
 
         }
 
@@ -157,17 +155,38 @@ namespace CharMax.Operations
                 }
             }
 
+            if(Rules.Count != duplicateRules.Count)
+            foreach (var item in duplicateRules)
+            {
+                    Rules.Remove(item);
+            }
+            return DropConditions(Rules);
+        }
+
+        private List<KeyValuePair<string, Rule>> DropConditions(List<KeyValuePair<string, Rule>> Rules)
+        {
+            foreach (var rule in Rules)
+            {
+                var droppedConditions = CheckSubsets(rule.Value, new KeyValuePair<string, List<int>>(rule.Key, rule.Value.Covers));
+                //for (int i = 0; i < rule.Value.Conditions.Count; i++)
+                //{
+
+                //}
+                rule.Value.Conditions = droppedConditions ?? rule.Value.Conditions;
+
+            }
+
             return Rules;
         }
 
         private List<AttributeValuePair> CheckSubsets(Rule tempRules, KeyValuePair<string, List<int>> originalProbBlocks)
         {
-            for (int i = 0; i < tempRules.Rules.Count; i++)
+            for (int i = 0; i < tempRules.Conditions.Count; i++)
             {
-                if (originalProbBlocks.Value.CheckSubset(tempRules.Rules[i].Blocks))
+                if (originalProbBlocks.Value.CheckSubset(tempRules.Conditions[i].Blocks))
                 {
                     List<AttributeValuePair> rul = new List<AttributeValuePair>();
-                    rul.Add(tempRules.Rules[i]);
+                    rul.Add(tempRules.Conditions[i]);
                     return rul;
                 }
 
@@ -175,15 +194,15 @@ namespace CharMax.Operations
 
             bool isSubset = false;
             List<AttributeValuePair> rules = new List<AttributeValuePair>();
-            rules.Add(tempRules.Rules[0]);
-            for (int i = 1; i < tempRules.Rules.Count; i++)
+            rules.Add(tempRules.Conditions[0]);
+            for (int i = 1; i < tempRules.Conditions.Count; i++)
             {
-                for (int j = i; j < tempRules.Rules.Count; j++)
+                for (int j = i; j < tempRules.Conditions.Count; j++)
                 {
                     var tempArr = new AttributeValuePair[rules.Count];
                     rules.CopyTo(tempArr);
                     var tempList = tempArr.ToList();
-                    tempList.Add(tempRules.Rules[j]);
+                    tempList.Add(tempRules.Conditions[j]);
                     var newIntersectBlock = tempList.Select(t => t.Blocks).IntersectAll().ToList() ;
 
                     if (originalProbBlocks.Value.CheckSubset(newIntersectBlock))
@@ -191,8 +210,12 @@ namespace CharMax.Operations
                         isSubset = true;
                         break;
                     }
+
                 }
-                rules.Add(tempRules.Rules[i]);
+
+                rules.Add(tempRules.Conditions[i]);
+                if (isSubset)
+                    break;
             }
 
             if (isSubset)

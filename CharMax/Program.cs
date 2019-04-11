@@ -88,38 +88,39 @@ namespace CharMax
             {
                 var dataTable = FileOperation.ReadDataFile(file);
                 Data data = new Data(dataTable);
-                var alphaValue = 0.5f;
-                //for (float alphaValue = 0.0f; alphaValue <= 1.0f; alphaValue = (float)Math.Round(alphaValue + 0.10f, 1))
+                //var alphaValue = 0.0f;
+                for (float alphaValue = 0.01f; alphaValue <= 1.0f; alphaValue = (float)Math.Round(alphaValue + 0.10f, 1))
                 {
                     RuleInduction ruleInductionCharacteristic = new RuleInduction();
 
                     RuleInduction ruleInductionMCB = new RuleInduction();
-                    //var charTask = Task.Factory.StartNew(() =>
-                    //{
-                    //    var charApprox = ProbApprox.GetConceptApprox(data.Characteristic, data.ConditionalProbability.CharacteristicCondProb, alphaValue);
-                    //    return ruleInductionCharacteristic.ComputeRules(data, data.AttributeValuePairs, charApprox);
-                    //});
+                    var charTask = Task.Factory.StartNew(() =>
+                    {
+                        var charApprox = ProbApprox.GetConceptApprox(data.Characteristic, data.ConditionalProbability.CharacteristicCondProb, alphaValue);
+                        return ruleInductionCharacteristic.ComputeRules(data, data.AttributeValuePairs, charApprox);
+                    });
 
-                    //var mcBTask = Task.Factory.StartNew(() =>
-                    //{
-                    //    var mcbApprox = ProbApprox.GetConceptApprox(data.MaximalConsistent, data.ConditionalProbability.MaximalCondProb, alphaValue);
-                    //    return ruleInductionMCB.ComputeRules(data, data.AttributeValuePairs, mcbApprox);
-                    //});
+                    var mcBTask = Task.Factory.StartNew(() =>
+                    {
+                        var mcbApprox = ProbApprox.GetConceptApprox(data.MaximalConsistent, data.ConditionalProbability.MaximalCondProb, alphaValue);
+                        return ruleInductionMCB.ComputeRules(data, data.AttributeValuePairs, mcbApprox);
+                    });
 
-                    //Task.WaitAll(charTask, mcBTask);
+                    Task.WaitAll(charTask, mcBTask);
 
-                    //var charRule = charTask.Result;
-                    //var mcbRule = mcBTask.Result;
+                    var charRule = charTask.Result;
+                    var mcbRule = mcBTask.Result;
 
-                    var charApprox = ProbApprox.GetConceptApprox(data.Characteristic, data.ConditionalProbability.CharacteristicCondProb, alphaValue);
-                    var r = ruleInductionCharacteristic.ComputeRules(data, data.AttributeValuePairs, charApprox);
+                    //var charApprox = ProbApprox.GetConceptApprox(data.Characteristic, data.ConditionalProbability.CharacteristicCondProb, alphaValue);
+                    //var r = ruleInductionCharacteristic.ComputeRules(data, data.AttributeValuePairs, charApprox);
 
-                    var mcbApprox = ProbApprox.GetConceptApprox(data.MaximalConsistent, data.ConditionalProbability.MaximalCondProb, alphaValue);
-                    var r1=  ruleInductionMCB.ComputeRules(data, data.AttributeValuePairs, mcbApprox);
+                    //var mcbApprox = ProbApprox.GetConceptApprox(data.MaximalConsistent, data.ConditionalProbability.MaximalCondProb, alphaValue);
+                    //var r1=  ruleInductionMCB.ComputeRules(data, data.AttributeValuePairs, mcbApprox);
 
-                    //Rules rules = new Rules(Path.GetFileNameWithoutExtension(file), alphaValue, charRule, mcbRule);
+                    Rules rules = new Rules(Path.GetFileNameWithoutExtension(file), alphaValue, charRule, mcbRule);
+                    //Rules rules = new Rules(Path.GetFileNameWithoutExtension(file), alphaValue, r, r1);
 
-                    //AllRules.Add(rules);
+                    AllRules.Add(rules);
 
                 }
             }
@@ -142,7 +143,7 @@ namespace CharMax
             StringBuilder sb = new StringBuilder();
             foreach (var item in Rules)
             {
-                var temp = item.Value.Rules.Select(t => "(" + t.AttributeValue.Attribute + "," + t.AttributeValue.Value + ")");
+                var temp = item.Value.Conditions.Select(t => "(" + t.AttributeValue.Attribute + "," + t.AttributeValue.Value + ")");
                 sb.AppendLine($"{string.Join(",", temp.ToList())} ---------- {item.Key}");
             }
 

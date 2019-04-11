@@ -66,7 +66,7 @@ namespace CharMax.Models
                     var max = distinctValues[distinctValues.Count - 1];
                     foreach (var cutPoint in cutPoints)
                     {
-                        var newColumnName = string.Concat(column.Key, cutPoint);
+                        var newColumnName = string.Concat(column.Key,"|", cutPoint);
                         dataSet.Columns.Add(newColumnName, typeof(string));
 
                         foreach (DataRow row in dataSet.Rows)
@@ -99,7 +99,7 @@ namespace CharMax.Models
 
                     foreach (var cutpoint in CutPoints[column.Key])
                     {
-                        dataSet.Columns[string.Concat(column.Key, cutpoint)].SetOrdinal(ordinal);
+                        dataSet.Columns[string.Concat(column.Key,"|", cutpoint)].SetOrdinal(ordinal);
                         ordinal++;
                     }
                 }

@@ -26,7 +26,7 @@ namespace CharMax.Helper
 
             foreach (var rule in RuleSet)
             {
-                dataSet.Rows.Add(rule.FileName, rule.AlphaValue, rule.CharacteristicRules.Count, 
+                dataSet.Rows.Add(rule.FileName, rule.AlphaValue ==0.01f ?0.0f : rule.AlphaValue, rule.CharacteristicRules.Count, 
                     rule.MCBRules.Count,GetConditionCount(rule.CharacteristicRules),GetConditionCount(rule.MCBRules));
             }
 
@@ -35,9 +35,12 @@ namespace CharMax.Helper
             RuleStatistics.WriteToCsvFile(ConfigurationManager.AppSettings["ResultFolder"]);
         }
 
+
         private int GetConditionCount(List<KeyValuePair<string, Models.Rule>> rules)
         {
-            return rules.Sum(t => t.Value.Rules.Count);
+            var attr = rules.Select(t => t.Value.Conditions.Select(u => u.AttributeValue.Attribute.Contains("|") ? 
+            u.AttributeValue.Attribute.Substring(0, u.AttributeValue.Attribute.IndexOf("|") - 1) : u.AttributeValue.Attribute).Distinct().ToList());
+            return attr.Sum(t => t.Count);
         }
     }
 }
