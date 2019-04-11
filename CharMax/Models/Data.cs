@@ -53,9 +53,11 @@ namespace CharMax.Models
 
                     distinctValues.Sort();
 
+                    int rnd = 4;
+
                     for (int i = 0; i < distinctValues.Count-1; i++)
                     {
-                        cutPoints.Add((distinctValues[i] + distinctValues[i + 1]) / 2f);
+                        cutPoints.Add((float)Math.Round((distinctValues[i] + distinctValues[i + 1]) / 2f, rnd));
                     }
                     cutPoints = cutPoints.Distinct().ToList();
 
@@ -74,9 +76,9 @@ namespace CharMax.Models
                             var actualValue = row[column.Key].ToString();
                             if (actualValue == "?")
                                 row.SetField<string>(newColumnName, row[column.Key].ToString());
-                            else if (float.Parse(actualValue) >= min && float.Parse(actualValue) <= cutPoint)
+                            else if (Math.Round(float.Parse(actualValue), rnd) >= min && Math.Round(float.Parse(actualValue), rnd) <= cutPoint)
                                 row.SetField<string>(newColumnName, $"{min}..{cutPoint}");
-                            else if (float.Parse(actualValue) >= cutPoint && float.Parse(actualValue) <= max)
+                            else if (Math.Round(float.Parse(actualValue), rnd) >= cutPoint && Math.Round(float.Parse(actualValue), rnd) <= max)
                                 row.SetField<string>(newColumnName, $"{cutPoint}..{max}");
                             else
                                 row.SetField<string>(newColumnName, row[column.Key].ToString());
@@ -91,19 +93,33 @@ namespace CharMax.Models
 
         private DataTable ReorderDataSet(DataTable dataSet)
         {
-            foreach (var column in ColumnTypes)
+            var numeric = ColumnTypes.Where(t => t.Value == ColumnType.NUMERIC);
+            int ordinal = 0;
+            if (numeric.Count()>0)
             {
-                if (column.Value == ColumnType.NUMERIC)
+                foreach (var column in numeric)
                 {
-                    var ordinal = OriginalDataSet.Columns[column.Key].Ordinal;
-
+                    //ordinal += OriginalDataSet.Columns[column.Key].Ordinal + ordinal - 1 < 0 ?0 : OriginalDataSet.Columns[column.Key].Ordinal;
                     foreach (var cutpoint in CutPoints[column.Key])
                     {
-                        dataSet.Columns[string.Concat(column.Key,"|", cutpoint)].SetOrdinal(ordinal);
+                        dataSet.Columns[string.Concat(column.Key, "|", cutpoint)].SetOrdinal(ordinal);
                         ordinal++;
                     }
                 }
             }
+
+            //foreach (var column in ColumnTypes)
+            //{
+            //    if (column.Value == ColumnType.NUMERIC)
+            //    {
+                    
+            //        foreach (var cutpoint in CutPoints[column.Key])
+            //        {
+            //            dataSet.Columns[string.Concat(column.Key,"|", cutpoint)].SetOrdinal(ordinal);
+            //            ordinal++;
+            //        }
+            //    }
+            //}
             return dataSet;
         }
 

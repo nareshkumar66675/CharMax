@@ -37,6 +37,7 @@ namespace CharMax.Helper
             DataTable data = new DataTable();
             if (File.Exists(path))
             {
+                int decision = 0;
                 using (StreamReader sr = new StreamReader(path))
                 {
                     string line = string.Empty;
@@ -46,14 +47,15 @@ namespace CharMax.Helper
                             switch (line[0])
                             {
                                 case '<':
+                                    decision = GetDecisionIndex(line);
                                     break;
                                 case '!':
                                     break;
                                 case '[':
-                                    ParseHeaders(line, data);
+                                    ParseHeaders(line, data, decision);
                                     break;
                                 default:
-                                    ParseLine(line, data);
+                                    ParseLine(line, data, decision);
                                     break;
                             }
                     }
@@ -67,17 +69,33 @@ namespace CharMax.Helper
             return data;
         }
 
-        private static void ParseHeaders(string line, DataTable data)
+        private static int GetDecisionIndex(string line)
+        {
+            var dataFormat = line.Trim().Replace('<', ' ').Replace('>', ' ').Split(new char[0], StringSplitOptions.RemoveEmptyEntries).ToList();
+
+            return dataFormat.FindIndex(t => t.ToLower() == "d");
+        }
+
+        private static void ParseHeaders(string line, DataTable data, int decisionIndex)
         {
             var colHeaders = line.Trim().Replace('[', ' ').Replace(']', ' ').Split(new char[0], StringSplitOptions.RemoveEmptyEntries).ToList();
             colHeaders.ForEach(t => data.Columns.Add(new DataColumn(t, typeof(string))));
+
+            //if (decisionIndex != null)
+            data.Columns[decisionIndex].SetOrdinal(data.Columns.Count - 1);
             data.Columns.Add(new DataColumn("ID", typeof(string)));
         }
-        private static void ParseLine(string line, DataTable data)
+        private static void ParseLine(string line, DataTable data, int decisionIndex)
         {
             if(!string.IsNullOrWhiteSpace(line))
             {
-                var values = line.Trim().Split(new char[0]).ToList();
+                var values = line.Trim().Split(new char[0], StringSplitOptions.RemoveEmptyEntries).ToList();
+
+                var item = values[decisionIndex];
+
+                values.RemoveAt(decisionIndex);
+
+                values.Add(item);
                 values.Add(data.Rows.Count + 1 + "");
 
                 if (values.Count == data.Columns.Count)

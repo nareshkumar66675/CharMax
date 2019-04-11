@@ -167,7 +167,7 @@ namespace CharMax.Operations
         {
             foreach (var rule in Rules)
             {
-                var droppedConditions = CheckSubsets(rule.Value, new KeyValuePair<string, List<int>>(rule.Key, rule.Value.Covers));
+                var droppedConditions = CheckSubsets(rule.Value, new KeyValuePair<string, List<int>>(rule.Key, rule.Value.Covers),true);
                 //for (int i = 0; i < rule.Value.Conditions.Count; i++)
                 //{
 
@@ -179,7 +179,7 @@ namespace CharMax.Operations
             return Rules;
         }
 
-        private List<AttributeValuePair> CheckSubsets(Rule tempRules, KeyValuePair<string, List<int>> originalProbBlocks)
+        private List<AttributeValuePair> CheckSubsets(Rule tempRules, KeyValuePair<string, List<int>> originalProbBlocks,bool conditionCheck = false)
         {
             for (int i = 0; i < tempRules.Conditions.Count; i++)
             {
