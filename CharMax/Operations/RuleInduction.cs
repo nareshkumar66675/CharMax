@@ -46,7 +46,7 @@ namespace CharMax.Operations
 
             }
 
-            return DropConditions(computedRules);
+            return DropRules(computedRules);
         }
 
 
@@ -107,8 +107,8 @@ namespace CharMax.Operations
                     tempRules.Conditions.Add(selectedAttrValPair);
 
                     var nextItrProbBlocks = new List<int>(maxMatchingBlocks.Where(t => t.AttributeValue == selectedAttrValPair.AttributeValue).First().Blocks);
-                    tempMatchingBlocks.Where(t => t.AttributeValue == selectedAttrValPair.AttributeValue).First().Blocks = new List<int>();
-
+                    var nullify = tempMatchingBlocks.Where(t => t.AttributeValue == selectedAttrValPair.AttributeValue).First();
+                    nullify.Blocks = new List<int>();
 
                     return RecursiveRuleInduction(data, tempMatchingBlocks, new KeyValuePair<string, List<int>>(tempRules.Decision.Key, nextItrProbBlocks),  tempRules,originalProbBlocks);
                 }
@@ -129,8 +129,8 @@ namespace CharMax.Operations
                 {
                     //Unsuccessfull next iteration - 
                     var nextItrProbBlocks = new List<int>(maxMatchingBlocks.Where(t => t.AttributeValue == selectedAttrValPair.AttributeValue).First().Blocks);
-                    tempMatchingBlocks.Where(t => t.AttributeValue == selectedAttrValPair.AttributeValue).First().Blocks = new List<int>();
-
+                    var nullify = tempMatchingBlocks.Where(t => t.AttributeValue == selectedAttrValPair.AttributeValue).First();
+                    nullify.Blocks = new List<int>();
                     return RecursiveRuleInduction(data, tempMatchingBlocks, new KeyValuePair<string, List<int>>(tempRules.Decision.Key, nextItrProbBlocks), tempRules,originalProbBlocks);
                 }
             }
@@ -141,15 +141,17 @@ namespace CharMax.Operations
         {
             List<KeyValuePair<string, Rule>> duplicateRules = new List<KeyValuePair<string, Rule>>();
 
-            for (int i = 0; i < Rules.Count; i++)
+            var tempRules = Rules.OrderBy(t => t.Value.Covers.Count).ToList();
+
+            for (int i = 0; i < tempRules.Count; i++)
             {
-                for (int j = 0; j < Rules.Count; j++)
+                for (int j = 0; j < tempRules.Count; j++)
                 {
                     if (i == j)
                         continue;
-                    if(Rules[j].Value.Covers.CheckSubset(Rules[i].Value.Covers))
+                    if(tempRules[j].Value.Covers.CheckSubset(tempRules[i].Value.Covers))
                     {
-                        duplicateRules.Add(Rules[i]);
+                        duplicateRules.Add(tempRules[i]);
                         break;
                     }
                 }

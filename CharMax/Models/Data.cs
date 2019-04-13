@@ -49,7 +49,7 @@ namespace CharMax.Models
                 if(column.Value == ColumnType.NUMERIC)
                 {
 
-                    var distinctValues = dataSet.FindDistinctValues<string>(column.Key).Where(t=>t!="?").Select(t => float.Parse(t)).ToList();
+                    var distinctValues = dataSet.FindDistinctValues<string>(column.Key).Where(t=>t!="?" && t!="*").Select(t => float.Parse(t)).ToList();
 
                     distinctValues.Sort();
 
@@ -74,7 +74,7 @@ namespace CharMax.Models
                         foreach (DataRow row in dataSet.Rows)
                         {
                             var actualValue = row[column.Key].ToString();
-                            if (actualValue == "?")
+                            if (actualValue == "?" || actualValue == "*")
                                 row.SetField<string>(newColumnName, row[column.Key].ToString());
                             else if (Math.Round(float.Parse(actualValue), rnd) >= min && Math.Round(float.Parse(actualValue), rnd) <= cutPoint)
                                 row.SetField<string>(newColumnName, $"{min}..{cutPoint}");

@@ -22,6 +22,13 @@ namespace CharMax
             var files = Directory.GetFiles(ConfigurationManager.AppSettings["DataSetFolder"],"*.d",SearchOption.TopDirectoryOnly);
             ConcurrentBag<Rules> AllRules = new ConcurrentBag<Rules>();
 
+
+            List<List<int>> temp = new List<List<int>>();
+            temp.Add(new List<int> { 1, 2, 3, 4 });
+            temp.Add(new List<int> { 3, 4 });
+            temp.Add(new List<int> { 4, 3, 3, 4 });
+
+            var t= temp.IntersectAll().ToList();
             //Parallel.ForEach(files, file =>
             //{
             //    var dataTable = FileOperation.ReadDataFile(file);

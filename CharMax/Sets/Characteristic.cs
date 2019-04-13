@@ -35,7 +35,7 @@ namespace CharMax.Sets
                         else
                         {
                             var block = data.AttributeValuePairs.Where(pair => pair.AttributeValue.Attribute == col.ColumnName 
-                                && pair.AttributeValue.Value == value).Select(blocks => blocks.Blocks).FirstOrDefault();
+                                && pair.AttributeValue.Value == value).Select(blocks => blocks.Blocks).First();
                             characteristicList.Add(block);
                         }
                     }
