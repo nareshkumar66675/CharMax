@@ -10,6 +10,9 @@ namespace CharMax.Operations
 {
     class RuleInduction
     {
+        private int MaxIteration = 0;
+        List<int> RepeatBlocks = new List<int>();
+        List<int> PrevBlocks = new List<int>();
         public List<KeyValuePair<string, Rule>> ComputeRules(Data data, List<AttributeValuePair> attributeValuePairs, Dictionary<string, List<int>> probApprox)
         {
             List<KeyValuePair<string, Rule>> computedRules = new List<KeyValuePair<string, Rule>>();
@@ -131,7 +134,30 @@ namespace CharMax.Operations
                     var nextItrProbBlocks = new List<int>(maxMatchingBlocks.Where(t => t.AttributeValue == selectedAttrValPair.AttributeValue).First().Blocks);
                     var nullify = tempMatchingBlocks.Where(t => t.AttributeValue == selectedAttrValPair.AttributeValue).First();
                     nullify.Blocks = new List<int>();
-                    return RecursiveRuleInduction(data, tempMatchingBlocks, new KeyValuePair<string, List<int>>(tempRules.Decision.Key, nextItrProbBlocks), tempRules,originalProbBlocks);
+                    //return RecursiveRuleInduction(data, tempMatchingBlocks, new KeyValuePair<string, List<int>>(tempRules.Decision.Key, nextItrProbBlocks), tempRules, originalProbBlocks);
+
+
+                    if (!PrevBlocks.All(nextItrProbBlocks.Contains))
+                    {
+                        PrevBlocks = nextItrProbBlocks;
+                        RepeatBlocks.Clear();
+                        return RecursiveRuleInduction(data, tempMatchingBlocks, new KeyValuePair<string, List<int>>(tempRules.Decision.Key, nextItrProbBlocks), tempRules, originalProbBlocks);
+                    }
+                    else
+                    {
+                        RepeatBlocks.Add(nextItrProbBlocks.Count);
+                        if (RepeatBlocks.Skip(Math.Max(0, RepeatBlocks.Count() - 100)).Distinct().Count() == 1)
+                        {
+                            return null;
+                        }
+                        else
+                            return RecursiveRuleInduction(data, tempMatchingBlocks, new KeyValuePair<string, List<int>>(tempRules.Decision.Key, nextItrProbBlocks), tempRules, originalProbBlocks);
+                    }
+
+
+                    //if(MaxIteration<10)
+
+
                 }
             }
 

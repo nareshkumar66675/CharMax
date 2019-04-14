@@ -43,16 +43,42 @@ namespace CharMax.Models
         {
             FindNumericOrSymbolic(dataSet);
 
+            int decisionIndex = dataSet.Columns.Count - 2;
             foreach (var column in ColumnTypes)
             {
                 var cutPoints = new List<float>();
                 if(column.Value == ColumnType.NUMERIC)
                 {
 
-                    var distinctValues = dataSet.FindDistinctValues<string>(column.Key).Where(t=>t!="?" && t!="*").Select(t => float.Parse(t)).ToList();
+                    var distinctValuesString = dataSet.FindDistinctValues<string>(column.Key).Where(t => t != "?" && t != "*").ToList();
+
+                    var distinctValues = distinctValuesString.Select(t => float.Parse(t)).ToList();
 
                     distinctValues.Sort();
+                    var dataEnumer = dataSet.AsEnumerable();
 
+                    var temp = string.Empty;
+
+                    //var selectedValues = new List<float>();
+                    //for (int i = 0; i < distinctValues.Count - 1; i++)
+                    //{
+                    //    var matchings = dataEnumer.Where(t => !(new string[] { "*", "?" }).Contains(t.Field<string>(column.Key)) && float.Parse(t.Field<string>(column.Key)) == distinctValues[i]).
+                    //        Select(t => t.Field<string>(decisionIndex)).Distinct();
+
+                    //    if (matchings.Count() > 1)
+                    //        cutPoints.Add(distinctValues[i]);
+                    //    else
+                    //    {
+                    //        if (temp == matchings.First())
+                    //            continue;
+                    //        else
+                    //        {
+                    //            temp = matchings.First();
+                    //            selectedValues.Add(distinctValues[i]);
+                    //        }
+                    //    }
+                    //}
+                    //distinctValues = selectedValues;
                     int rnd = 4;
 
                     for (int i = 0; i < distinctValues.Count-1; i++)
@@ -66,6 +92,24 @@ namespace CharMax.Models
 
                     var min = distinctValues[0];
                     var max = distinctValues[distinctValues.Count - 1];
+
+
+                    //Selective Cutpoint
+
+                    
+                    foreach (var cutPoint in cutPoints)
+                    {
+                        //var values = dataEnumer.Where(t => t.Field<string>(column.Key)!="*" && t.Field<float>(column.Key) >= min && t.Field<float>(column.Key) <= cutPoint);
+
+                        //var values = from row in dataEnumer
+                        //where row.Field<string>(column.Key) != "*" &&
+                        //    float.Parse(row.Field<string>(column.Key)) >= min && float.Parse(row.Field<string>(column.Key))<=cutPoint
+                                     //select row.Field<string>("ID");
+                        
+                        //var values = dataSet.Select($" {column.Key}<> '*' && Convert({column.Key}, 'System.Decimal') >={min} &&  Convert({column.Key}, 'System.Decimal') >={cutPoint}");
+                    }
+
+
                     foreach (var cutPoint in cutPoints)
                     {
                         var newColumnName = string.Concat(column.Key,"|", cutPoint);
@@ -90,6 +134,15 @@ namespace CharMax.Models
 
             return ReorderDataSet(dataSet);
         }
+
+        //private void SelectiveCutpoints(DataTable dataSet)
+        //{
+        //    var dataEnumer = dataSet.AsEnumerable();
+        //    foreach (var cutPoint in CutPoints)
+        //    {
+        //        dataEnumer.Where(t=>t.Field<float>(cutPoint.Key)>=)
+        //    }
+        //}
 
         private DataTable ReorderDataSet(DataTable dataSet)
         {

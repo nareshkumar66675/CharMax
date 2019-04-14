@@ -1,0 +1,12 @@
+FileName,Alpha,CharRuleCount,MCBRuleCount,CharConditionCount,MCBConditionCount
+breast-35,1,11,67,74,468
+breast-35,0.9,15,67,100,468
+breast-35,0.8,29,61,173,376
+breast-35,0.7,20,50,98,264
+breast-35,0.6,9,58,31,227
+breast-35,0.5,15,47,57,168
+breast-35,0.4,15,35,44,139
+breast-35,0.3,13,29,31,85
+breast-35,0.2,4,25,3,51
+breast-35,0.1,4,11,3,33
+breast-35,0,5,8,4,10

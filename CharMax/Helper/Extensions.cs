@@ -28,11 +28,11 @@ namespace CharMax.Helper
 
         public static List<int> FindRecords(this EnumerableRowCollection<DataRow> dataEnumer, DataColumn column, string value)
         {
-            var starValues = from rows in dataEnumer
+            var records = from rows in dataEnumer
                              where rows.Field<string>(column) == value
                              select rows.Field<string>("ID");
 
-            return starValues.Select(int.Parse).ToList();
+            return records.Select(int.Parse).ToList();
         }
 
         public static List<TSource> FindDistinctValues<TSource>(this DataTable dataSet,int index)

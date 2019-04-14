@@ -38,10 +38,15 @@ namespace CharMax.Helper
 
         private int GetConditionCount(List<KeyValuePair<string, Models.Rule>> rules)
         {
-            var attr = rules.Select(t => t.Value.Conditions.Select(u => u.AttributeValue.Attribute.Contains("|") ? 
-            u.AttributeValue.Attribute.Substring(0, u.AttributeValue.Attribute.IndexOf("|") - 1) : u.AttributeValue.Attribute).Distinct().ToList());
-            attr = attr.OrderBy(t => t.Count).Take(attr.Count() - 1);
-            return attr.Sum(t => t.Count);
+            if (rules != null)
+            {
+                var attr = rules.Select(t => t.Value.Conditions.Select(u => u.AttributeValue.Attribute.Contains("|") ?
+                    u.AttributeValue.Attribute.Substring(0, u.AttributeValue.Attribute.IndexOf("|") - 1) : u.AttributeValue.Attribute).Distinct().ToList());
+                attr = attr.OrderBy(t => t.Count).Take(attr.Count() - 1);
+                return attr.Sum(t => t.Count);
+            }
+            else
+                return 0;
         }
     }
 }

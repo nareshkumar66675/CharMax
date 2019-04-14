@@ -113,7 +113,7 @@ namespace CharMax
                         return ruleInductionMCB.ComputeRules(data, data.AttributeValuePairs, mcbApprox);
                     });
 
-                    Task.WaitAll(charTask, mcBTask);
+                    //Task.WaitAll(charTask, mcBTask);
 
                     var charRule = charTask.Result;
                     var mcbRule = mcBTask.Result;
@@ -122,7 +122,7 @@ namespace CharMax
                     //var r = ruleInductionCharacteristic.ComputeRules(data, data.AttributeValuePairs, charApprox);
 
                     //var mcbApprox = ProbApprox.GetConceptApprox(data.MaximalConsistent, data.ConditionalProbability.MaximalCondProb, alphaValue);
-                    //var r1=  ruleInductionMCB.ComputeRules(data, data.AttributeValuePairs, mcbApprox);
+                    //var r1 = ruleInductionMCB.ComputeRules(data, data.AttributeValuePairs, mcbApprox);
 
                     Rules rules = new Rules(Path.GetFileNameWithoutExtension(file), alphaValue, charRule, mcbRule);
                     //Rules rules = new Rules(Path.GetFileNameWithoutExtension(file), alphaValue, r, r1);
