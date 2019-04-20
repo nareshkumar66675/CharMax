@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CharMax.Models.AttributeValue">
+    <Position X="4.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAgAAAAAAAAAAAAIAAAAAgAAAAAiA=</HashCode>
+      <FileName>Models\AttributeValuePair.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CharMax.Models.AttributeValuePair">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAACAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\AttributeValuePair.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CharMax.Models.Data">
+    <Position X="1.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAARAAAQCAAACACACAAAAQAACAACAgAAgAA=</HashCode>
+      <FileName>Models\Data.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CharMax.Models.Probabilities&lt;T&gt;">
+    <Position X="3" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAACAAAA=</HashCode>
+      <FileName>Models\Probabilities.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CharMax.Models.ConditionalProbability">
+    <Position X="4.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>Models\Probabilities.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CharMax.Models.Rule">
+    <Position X="4.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAAAAAQAAAAAAACAAAAA=</HashCode>
+      <FileName>Models\Rule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CharMax.Models.Rules">
+    <Position X="3" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAkABAAAA=</HashCode>
+      <FileName>Models\Rule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="CharMax.Models.ColumnType">
+    <Position X="1.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Data.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="8.83" />
+</ClassDiagram>

@@ -61,7 +61,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Helper\HelperClassDiagaram.cd" />
+    <None Include="ModelsClassDiagaram.cd" />
     <None Include="Datasets\test.d" />
+    <None Include="Operations\Operations.cd" />
+    <None Include="Sets\SetsClassDiagaram.cd" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
